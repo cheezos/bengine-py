@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./bengine/src",
+        "./bengine/bengine"
+    ]
+}
