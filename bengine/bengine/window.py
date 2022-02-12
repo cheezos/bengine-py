@@ -51,7 +51,7 @@ class Window(object):
         if maximize:
             glfw.maximize_window(Window._window)
 
-        glfw.set_framebuffer_size_callback(Window._window, lambda win, w, h : Window._resize_callback(w, h))
+        glfw.set_framebuffer_size_callback(Window._window, lambda _, w, h : Window._resize_callback(w, h))
 
         Window._size = (width, height)
         Window._ready = True
