@@ -6,30 +6,34 @@ from bengine.window import Window
 from bengine.game import Game
 
 _game: Game | None = None
+_should_close: bool = False
 
 def init(game: Game) -> None:
     global _game
-    _game = game
+    _game = game        
 
-    def create_thread(game: Game):
-        Window.create_window(1920, 1080)
-        game.on_init()
-        update()
+    engine_thread = threading.Thread(target=start_engine_update)
+    engine_thread.start()
 
-    thread = threading.Thread(target=create_thread, args=(_game,))
-    thread.start()
+    game_thread = threading.Thread(target=start_game_update)
+    game_thread.start()
 
-def update() -> None:
-    while not glfw.window_should_close(Window.get_window()):
+def start_engine_update() -> None:
+    Window.create_window(1920, 1080)
+
+    assert _game is not None
+    _game.on_init()
+
+    while not should_close():
         Window.update()
 
-        if (_game != None):
-            _game.on_update(Window.get_delta_time())
-
-        if should_close():
-            break
-
     cleanup()
+
+def start_game_update() -> None:
+    assert _game is not None
+    
+    while not should_close():
+        _game.on_update(Window.get_delta_time())
 
 def cleanup() -> None:
     print("Cleaning up...")
@@ -38,4 +42,12 @@ def cleanup() -> None:
     sys.exit()
 
 def should_close() -> bool:
-    return Input.is_action_just_pressed(glfw.KEY_ESCAPE)
+    global _should_close
+    
+    if glfw.window_should_close(Window.get_window()):
+        _should_close = True
+
+    if Input.is_action_just_pressed(glfw.KEY_ESCAPE):
+        _should_close = True
+
+    return _should_close

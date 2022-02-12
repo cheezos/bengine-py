@@ -1,3 +1,4 @@
+import time
 import bengine
 
 class Main(bengine.Game):
@@ -8,7 +9,8 @@ class Main(bengine.Game):
         print("init")
 
     def on_update(self, delta_time: float) -> None:
-        pass
+        print("piss")
+        time.sleep(1.0)
 
     def on_quit(self) -> None:
         pass
