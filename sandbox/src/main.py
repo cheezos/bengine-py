@@ -1,5 +1,6 @@
-import time
 import bengine
+
+from bengine.entity import Entity
 
 class Main(bengine.Game):
     def __init__(self) -> None:
@@ -8,8 +9,10 @@ class Main(bengine.Game):
     def on_init(self) -> None:
         print("init")
 
+        ent = Entity()
+
     def on_update(self, delta_time: float) -> None:
-        print(delta_time)
+        pass
 
     def on_quit(self) -> None:
         pass

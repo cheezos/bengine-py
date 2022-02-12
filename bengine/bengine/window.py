@@ -3,7 +3,7 @@ from OpenGL import GL
 
 class Window(object):
     _window: glfw._GLFWwindow | None = None
-    _resolution: tuple[int, int]
+    _size: tuple[int, int]
     _last_time: float = 0.0
     _delta_time: float = 0.0
     _fps: int = 0
@@ -14,6 +14,13 @@ class Window(object):
             raise Exception("Failed to initialize GLFW")
 
         print("Initialized GLFW")
+
+        maximize = False
+
+        if width == 0 or height == 0:
+            width = 1280
+            height = 720
+            maximize = True
         
         Window._window = glfw.create_window(width, height, "Bepto Engine", None, None)
 
@@ -32,13 +39,21 @@ class Window(object):
         pos_x = int((mon_width / 2) - (width / 2))
         pos_y = int((mon_height / 2) - (height / 2))
 
+        glfw.swap_interval(1) # vsync
+        glfw.set_window_attrib(Window._window, glfw.RESIZABLE, glfw.TRUE) # resizable
+
         glfw.set_window_pos(Window._window, pos_x, pos_y)
-        glfw.swap_interval(0) # vsync
         glfw.set_input_mode(Window._window, glfw.RAW_MOUSE_MOTION, glfw.TRUE)
         glfw.set_cursor_pos(Window._window, width / 2, height / 2)
         
         GL.glEnable(GL.GL_CULL_FACE)
 
+        if maximize:
+            glfw.maximize_window(Window._window)
+
+        glfw.set_framebuffer_size_callback(Window._window, lambda win, w, h : Window._resize_callback(w, h))
+
+        Window._size = (width, height)
         Window._ready = True
     
     @staticmethod
@@ -59,6 +74,11 @@ class Window(object):
     def cleanup() -> None:
         glfw.terminate()
         Window._window = None
+
+    @staticmethod
+    def _resize_callback(width: int, height: int) -> None:
+        GL.glViewport(0, 0, width, height)
+        Window._size = (width, height)
 
     @staticmethod
     def get_window() -> glfw._GLFWwindow | None:

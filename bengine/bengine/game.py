@@ -8,4 +8,4 @@ class Game:
     def on_update(self, delta_time: float) -> None: pass
 
     @abstractmethod
-    def on_quit(self, delta_time: float) -> None: pass
+    def on_quit(self) -> None: pass

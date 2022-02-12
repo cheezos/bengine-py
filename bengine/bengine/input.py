@@ -1,5 +1,4 @@
 import glfw
-
 from bengine.window import Window
 
 class Input(object):

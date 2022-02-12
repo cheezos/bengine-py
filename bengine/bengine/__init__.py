@@ -16,14 +16,14 @@ def init(game: Game) -> None:
     engine_thread = threading.Thread(target=_initialize_engine)
     engine_thread.start()
 
+    game_thread = threading.Thread(target=_initialize_game)
+    game_thread.start()
+
 def _initialize_engine() -> None:
-    Window.create_window(1920, 1080)
+    Window.create_window(0, 1080)
 
     assert _game is not None
     _game.on_init()
-
-    game_thread = threading.Thread(target=_initialize_game)
-    game_thread.start()
 
     while not _should_close():
         Window.update()
@@ -35,6 +35,8 @@ def _initialize_game() -> None:
     
     while not _should_close():
         _game.on_update(Window.get_delta_time())
+
+    _game.on_quit()
 
 def _cleanup() -> None:
     print("Cleaning up...")
