@@ -9,8 +9,7 @@ class Main(bengine.Game):
         print("init")
 
     def on_update(self, delta_time: float) -> None:
-        print("piss")
-        time.sleep(1.0)
+        print(delta_time)
 
     def on_quit(self) -> None:
         pass

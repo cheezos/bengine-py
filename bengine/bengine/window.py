@@ -38,6 +38,8 @@ class Window(object):
         glfw.set_cursor_pos(Window._window, width / 2, height / 2)
         
         GL.glEnable(GL.GL_CULL_FACE)
+
+        Window._ready = True
     
     @staticmethod
     def update() -> None:
@@ -56,6 +58,7 @@ class Window(object):
     @staticmethod
     def cleanup() -> None:
         glfw.terminate()
+        Window._window = None
 
     @staticmethod
     def get_window() -> glfw._GLFWwindow | None:

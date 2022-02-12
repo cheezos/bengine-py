@@ -1,53 +1,57 @@
 import threading
 import sys
+import time
 import glfw
 from bengine.input import Input
 from bengine.window import Window
 from bengine.game import Game
 
 _game: Game | None = None
-_should_close: bool = False
+_quit: bool = False
 
 def init(game: Game) -> None:
     global _game
     _game = game        
 
-    engine_thread = threading.Thread(target=start_engine_update)
+    engine_thread = threading.Thread(target=_initialize_engine)
     engine_thread.start()
 
-    game_thread = threading.Thread(target=start_game_update)
-    game_thread.start()
-
-def start_engine_update() -> None:
+def _initialize_engine() -> None:
     Window.create_window(1920, 1080)
 
     assert _game is not None
     _game.on_init()
 
-    while not should_close():
+    game_thread = threading.Thread(target=_initialize_game)
+    game_thread.start()
+
+    while not _should_close():
         Window.update()
 
-    cleanup()
+    _cleanup()
 
-def start_game_update() -> None:
+def _initialize_game() -> None:
     assert _game is not None
     
-    while not should_close():
+    while not _should_close():
         _game.on_update(Window.get_delta_time())
 
-def cleanup() -> None:
+def _cleanup() -> None:
     print("Cleaning up...")
 
     Window.cleanup()
     sys.exit()
 
-def should_close() -> bool:
-    global _should_close
+def _should_close() -> bool:
+    global _quit
+
+    if Window.get_window() is None:
+        return True
     
     if glfw.window_should_close(Window.get_window()):
-        _should_close = True
+        _quit = True
 
     if Input.is_action_just_pressed(glfw.KEY_ESCAPE):
-        _should_close = True
+        _quit = True
 
-    return _should_close
+    return _quit
