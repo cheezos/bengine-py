@@ -64,3 +64,7 @@ class Window(object):
     @staticmethod
     def get_fps() -> int:
         return Window._fps
+
+    @staticmethod
+    def get_delta_time() -> float:
+        return Window._delta_time

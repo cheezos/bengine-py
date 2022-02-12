@@ -1,23 +1,30 @@
 import threading
 import sys
 import glfw
-from typing import Callable
 from bengine.input import Input
 from bengine.window import Window
+from bengine.game import Game
 
-def init(callback: Callable) -> None:
-    def create_thread():
+_game: Game | None = None
+
+def init(game: Game) -> None:
+    global _game
+    _game = game
+
+    def create_thread(game: Game):
         Window.create_window(1920, 1080)
-        callback()
+        game.on_init()
         update()
 
-    thread = threading.Thread(target=create_thread)
+    thread = threading.Thread(target=create_thread, args=(_game,))
     thread.start()
-
 
 def update() -> None:
     while not glfw.window_should_close(Window.get_window()):
         Window.update()
+
+        if (_game != None):
+            _game.on_update(Window.get_delta_time())
 
         if should_close():
             break

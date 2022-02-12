@@ -1,18 +1,17 @@
-import time
 import bengine
 
-class Main:
+class Main(bengine.Game):
     def __init__(self) -> None:
-        bengine.init(lambda : self.init())
+        bengine.init(self)
 
-        self.update()
+    def on_init(self) -> None:
+        print("init")
 
-    def init(self) -> None:
+    def on_update(self, delta_time: float) -> None:
         pass
 
-    def update(self) -> None:
-        while bengine.Window.get_window():
-            print("swag")
+    def on_quit(self) -> None:
+        pass
 
 if __name__ == '__main__':
     main = Main()
