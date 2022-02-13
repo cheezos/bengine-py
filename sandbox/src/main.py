@@ -7,9 +7,7 @@ class Main(bengine.Game):
         bengine.init(self)
 
     def on_init(self) -> None:
-        print("init")
-
-        ent = Entity()
+        pass
 
     def on_update(self, delta_time: float) -> None:
         pass

@@ -20,7 +20,7 @@ def init(game: Game) -> None:
     game_thread.start()
 
 def _initialize_engine() -> None:
-    Window.create_window(0, 1080)
+    Window.create_window(1280, 720)
 
     assert _game is not None
     _game.on_init()

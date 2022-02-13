@@ -45,6 +45,7 @@ class Window(object):
         glfw.set_window_pos(Window._window, pos_x, pos_y)
         glfw.set_input_mode(Window._window, glfw.RAW_MOUSE_MOTION, glfw.TRUE)
         glfw.set_cursor_pos(Window._window, width / 2, height / 2)
+        glfw.show_window(Window._window)
         
         GL.glEnable(GL.GL_CULL_FACE)
 
