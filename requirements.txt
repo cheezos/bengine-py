@@ -1,4 +1,4 @@
--e git+https://github.com/slugnasty/bepto-engine.git@1b82c2a37411a8122e6c590585263e64012627de#egg=bengine&subdirectory=bengine
+-e git+https://github.com/slugnasty/bepto-engine.git@89f57795508299061b5c3d6d60b486ef13606e2b#egg=bengine&subdirectory=bengine
 cx-Freeze==6.10
 cx-Logging==3.0
 glfw==2.5.0
