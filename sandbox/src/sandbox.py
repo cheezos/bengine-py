@@ -1,6 +1,5 @@
 import bengine
-
-from bengine.entity import Entity
+import numpy as np
 from bengine.mesh_instance import MeshInstance
 
 class Sandbox(bengine.Game):
@@ -8,7 +7,7 @@ class Sandbox(bengine.Game):
         bengine.init(self, "Sandbox")
 
     def on_init(self) -> None:
-        MeshInstance("models/b.obj")
+        MeshInstance("models/b.obj", position=np.array([0, 0, -5]))
 
     def on_update(self, delta_time: float) -> None:
         pass

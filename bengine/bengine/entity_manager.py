@@ -10,4 +10,4 @@ class EntityManager(object):
     @staticmethod
     def update(delta_time: float) -> None:
         for entity in EntityManager._entities:
-            entity.process(delta_time)
+            getattr(entity, "_process")(delta_time)

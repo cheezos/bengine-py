@@ -1,45 +1,29 @@
 
 class UnlitShaderSource(object):
     vertex_shader = """
-        # version 330 core
-        # extension GL_ARB_separate_shader_objects : enable
-        
-        layout (location=0) in vec3 vertexPos;
-        layout (location=1) in vec2 vertexTexCoord;
-        layout (location=2) in vec3 vertexNormal;
-        
-        uniform mat4 model;
-        uniform mat4 view;
-        uniform mat4 projection;
-        
-        layout (location=0) out vec3 fragmentPos;
-        layout (location=1) out vec2 fragmentTexCoord;
-        layout (location=2) out vec3 fragmentNormal;
+        #version 430 core
 
-        void main()
-        {
-            gl_Position = projection * view * model * vec4(vertexPos, 1.0);
-            fragmentPos = vec3(model * vec4(vertexPos, 1.0));
-            fragmentTexCoord = vertexTexCoord;
-            fragmentNormal = mat3(model) * vertexNormal;
+        in vec3 position;
+        in vec2 textureCoord;
+        out vec2 fragTextureCoord;
+        uniform mat4 transformMatrix;
+        uniform mat4 projectionMatrix;
+        uniform mat4 viewMatrix;
+
+        void main() {
+            gl_Position = projectionMatrix * viewMatrix * transformMatrix * vec4(position, 1.0);
+            fragTextureCoord = textureCoord;
         }
     """
 
     fragment_shader = """
-        # version 330 core
-        # extension GL_ARB_separate_shader_objects : enable
-        
-        layout (location=0) in vec3 fragmentPos;
-        layout (location=1) in vec2 fragmentTexCoord;
-        layout (location=2) in vec3 fragmentNormal;
-        
-        uniform vec3 cameraPos;
-        uniform sampler2D diffuse;
-        
-        layout (location=0) out vec4 colour;
+        #version 430 core
 
-        void main()
-        {
-            colour = texture(diffuse, fragmentTexCoord);
+        in vec2 fragTextureCoord;
+        out vec4 fragColour;
+        uniform sampler2D textureSample;
+
+        void main() {
+            fragColour = texture(textureSample, fragTextureCoord);
         }
     """

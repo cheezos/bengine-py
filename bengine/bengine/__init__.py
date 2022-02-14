@@ -6,25 +6,29 @@ from bengine.input import Input
 from bengine.game import Game
 from bengine.entity_manager import EntityManager
 from bengine.loader import Loader
+from bengine.camera import Camera
 
 _game: Game | None = None
+_camera: Camera | None = None
 _quit: bool = False
 
 def init(game: Game, title: str) -> None:
-    global _game
-    _game = game        
-
-    engine_thread = threading.Thread(target=_initialize_engine, args=(title,))
+    global _game, _camera
+    _game = game
+    
+    engine_thread = threading.Thread(target=_start_engine, args=(title,))
     engine_thread.start()
 
-    game_thread = threading.Thread(target=_initialize_game)
+    game_thread = threading.Thread(target=_start_game)
     game_thread.start()
 
-def _initialize_engine(title: str) -> None:
-    Window.create_window(title, 1280, 720)
-
+def _start_engine(title: str) -> None:
     assert _game is not None
+
+    Window.create_window(title, 1280, 720)
+    
     _game.on_init()
+    _camera = Camera()
 
     while not _should_close():
         Window.update()
@@ -32,7 +36,7 @@ def _initialize_engine(title: str) -> None:
 
     _cleanup()
 
-def _initialize_game() -> None:
+def _start_game() -> None:
     assert _game is not None
     
     while not _should_close():
@@ -43,8 +47,8 @@ def _initialize_game() -> None:
 def _cleanup() -> None:
     print("Cleaning up...")
 
-    Window.cleanup()
     Loader.cleanup()
+    Window.cleanup()
     sys.exit()
 
 def _should_close() -> bool:
