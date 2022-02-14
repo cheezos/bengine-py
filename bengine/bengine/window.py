@@ -3,13 +3,14 @@ from OpenGL import GL
 
 class Window(object):
     _window: glfw._GLFWwindow | None = None
+    _title: str = "Bepto Engine"
     _size: tuple[int, int]
     _last_time: float = 0.0
     _delta_time: float = 0.0
     _fps: int = 0
         
     @staticmethod
-    def create_window(width: int, height: int) -> None:
+    def create_window(title: str, width: int, height: int) -> None:
         if not glfw.init():
             raise Exception("Failed to initialize GLFW")
 
@@ -22,7 +23,7 @@ class Window(object):
             height = 720
             maximize = True
         
-        Window._window = glfw.create_window(width, height, "Bepto Engine", None, None)
+        Window._window = glfw.create_window(width, height, title, None, None)
 
         if not Window._window:
             glfw.terminate()
@@ -54,6 +55,7 @@ class Window(object):
 
         glfw.set_framebuffer_size_callback(Window._window, lambda _, w, h : Window._resize_callback(w, h))
 
+        Window._title = title
         Window._size = (width, height)
         Window._ready = True
     
@@ -69,7 +71,7 @@ class Window(object):
         Window._last_time = glfw.get_time()
         Window._fps = int(1.0 / Window._delta_time)
 
-        glfw.set_window_title(Window._window, f"Bepto Engine | FPS: {Window._fps}")
+        glfw.set_window_title(Window._window, f"{Window._title} | FPS: {Window._fps}")
 
     @staticmethod
     def cleanup() -> None:
@@ -84,6 +86,14 @@ class Window(object):
     @staticmethod
     def get_window() -> glfw._GLFWwindow | None:
         return Window._window
+
+    @staticmethod
+    def get_title() -> str:
+        return Window._title
+    
+    @staticmethod
+    def get_size() -> tuple[int, int]:
+        return Window._size
 
     @staticmethod
     def get_fps() -> int:

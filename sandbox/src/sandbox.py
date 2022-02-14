@@ -1,13 +1,14 @@
 import bengine
 
 from bengine.entity import Entity
+from bengine.mesh_instance import MeshInstance
 
-class Main(bengine.Game):
+class Sandbox(bengine.Game):
     def __init__(self) -> None:
-        bengine.init(self)
+        bengine.init(self, "Sandbox")
 
     def on_init(self) -> None:
-        pass
+        MeshInstance("models/b.obj")
 
     def on_update(self, delta_time: float) -> None:
         pass
@@ -15,5 +16,4 @@ class Main(bengine.Game):
     def on_quit(self) -> None:
         pass
 
-if __name__ == '__main__':
-    main = Main()
+Sandbox()
