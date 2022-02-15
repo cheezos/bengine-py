@@ -5,17 +5,13 @@ from OpenGL import GL
 from OpenGL.GL import shaders
 
 class Loader(object):
-    _shaders: list[shaders.ShaderProgram] = []
-    _textures: list[int] = []
-
     @staticmethod
     def load_shader(vertex_code: str, fragment_code: str) -> shaders.ShaderProgram:
-        shader = shaders.compileProgram(
+        shader: int = shaders.compileProgram(
             shaders.compileShader(vertex_code, GL.GL_VERTEX_SHADER),
             shaders.compileShader(fragment_code, GL.GL_FRAGMENT_SHADER),
         )
         
-        Loader._shaders.append(shader)
         return shader
 
     @staticmethod
@@ -33,8 +29,4 @@ class Loader(object):
         return os.path.join(os.path.abspath("."), path)
 
     @staticmethod
-    def cleanup() -> None:
-        for shader in Loader._shaders:
-            GL.glDeleteProgram(shader)
-
-        Loader._shaders = []
+    def cleanup() -> None: pass

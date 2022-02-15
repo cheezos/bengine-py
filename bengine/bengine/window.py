@@ -42,7 +42,7 @@ class Window(object):
         pos_x = int((mon_width / 2) - (width / 2))
         pos_y = int((mon_height / 2) - (height / 2))
 
-        glfw.swap_interval(0) # vsync
+        glfw.swap_interval(1) # vsync
         glfw.set_window_attrib(Window._window, glfw.RESIZABLE, glfw.TRUE) # resizable
 
         glfw.set_window_pos(Window._window, pos_x, pos_y)

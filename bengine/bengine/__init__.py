@@ -19,34 +19,26 @@ def init(game: Game, title: str) -> None:
     engine_thread = threading.Thread(target=_start_engine, args=(title,))
     engine_thread.start()
 
-    game_thread = threading.Thread(target=_start_game)
-    game_thread.start()
-
 def _start_engine(title: str) -> None:
     assert _game is not None
     global _camera
 
     Window.create_window(title, 1280, 720)
     _camera = Camera()
-    _game.on_init()
+    _game.init()
 
     while not _should_close():
         Window.update()
         EntityManager.update(Window.get_delta_time())
+        _game.update(Window.get_delta_time())
 
     _cleanup()
-
-def _start_game() -> None:
-    assert _game is not None
-    
-    while not _should_close():
-        _game.on_update(Window.get_delta_time())
-
-    _game.on_quit()
 
 def _cleanup() -> None:
     print("Cleaning up...")
 
+    _game.quit()
+    EntityManager.cleanup()
     Loader.cleanup()
     Window.cleanup()
     sys.exit()

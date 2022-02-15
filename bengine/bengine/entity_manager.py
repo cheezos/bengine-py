@@ -11,3 +11,8 @@ class EntityManager(object):
     def update(delta_time: float) -> None:
         for entity in EntityManager._entities:
             getattr(entity, "_process")(delta_time)
+    
+    @staticmethod
+    def cleanup() -> None:
+        for entity in EntityManager._entities:
+            getattr(entity, "destroy")()

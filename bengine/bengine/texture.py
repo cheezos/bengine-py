@@ -17,4 +17,4 @@ class Texture:
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._textures)
     
     def destroy(self) -> None:
-        GL.glDeleteTextures(1, self._textures)
+        GL.glDeleteTextures(1, (self._textures,))

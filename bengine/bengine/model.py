@@ -6,6 +6,7 @@ class Model:
     def __init__(self, model_path: str) -> None:
         self._vertices = OBJLoader.load(model_path)
         self._vertex_count = int(len(self._vertices) / 8)
+        
         # Vertex Array Object
         self._vao = GL.glGenVertexArrays(1)
         GL.glBindVertexArray(self._vao)
@@ -39,5 +40,5 @@ class Model:
         GL.glBindVertexArray(0)
 
     def destroy(self) -> None:
-        GL.glDeleteVertexArrays(1, self._vao)
-        GL.glDeleteBuffers(1, self._vbo)
+        GL.glDeleteVertexArrays(1, (self._vao,))
+        GL.glDeleteBuffers(1, (self._vbo,))
