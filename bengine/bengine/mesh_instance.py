@@ -19,9 +19,9 @@ class MeshInstance(Entity):
     def _process(self, delta_time: float) -> None:
         super()._process(delta_time)
 
-        self._shader.update(self)
-        self._texture.update()
-        self._model.update()
+        self._shader._update(self)
+        self._texture._update()
+        self._model._update()
 
         GL.glUseProgram(0)
 

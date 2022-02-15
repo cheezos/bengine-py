@@ -1,19 +1,20 @@
-import bengine
+from bengine.engine import Engine
+from bengine.game import Game
 from bengine.mesh_instance import MeshInstance
+from bengine.prefabs.freecam import Freecam
 
-class Sandbox(bengine.Game):
+class Sandbox(Game):
     def __init__(self) -> None:
-        bengine.init(self, "Sandbox")
+        Engine.init(self, "Sandbox")
 
     def init(self) -> None:
         self.m = MeshInstance("models/b.obj")
         self.m.translate(0, 0, -5)
+        self.c = Freecam()
 
     def update(self, delta_time: float) -> None:
         self.m.translate(delta_time, 0, 0)
-        pass
 
-    def quit(self) -> None:
-        print("quitted")
+    def quit(self) -> None: pass
 
 Sandbox()

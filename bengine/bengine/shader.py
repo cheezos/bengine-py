@@ -2,8 +2,7 @@ from OpenGL.GL import shaders
 from OpenGL import GL
 from bengine.loader import Loader
 from bengine.entity import Entity
-from bengine.window import Window
-import bengine
+from bengine.engine import Engine
 
 class Shader:
     def __init__(self, vertex_code: str, fragment_code: str) -> None:
@@ -21,15 +20,15 @@ class Shader:
         self._create_uniform("projectionMatrix")
         self._create_uniform("viewMatrix")
 
-    def update(self, ent: Entity) -> None:
-        GL.glUseProgram(self._program)
-        GL.glUniformMatrix4fv(self._get_uniform_location("transformMatrix"), 1, GL.GL_FALSE, ent.transform_matrix)
-        GL.glUniformMatrix4fv(self._get_uniform_location("projectionMatrix"), 1, GL.GL_FALSE, bengine.get_camera().projection_matrix)
-        GL.glUniformMatrix4fv(self._get_uniform_location("viewMatrix"), 1, GL.GL_FALSE, bengine.get_camera().view_matrix)
-
     def destroy(self) -> None:
         GL.glUseProgram(0)
         GL.glDeleteProgram(self._program)
+
+    def _update(self, ent: Entity) -> None:
+        GL.glUseProgram(self._program)
+        GL.glUniformMatrix4fv(self._get_uniform_location("transformMatrix"), 1, GL.GL_FALSE, ent.transform_matrix)
+        GL.glUniformMatrix4fv(self._get_uniform_location("projectionMatrix"), 1, GL.GL_FALSE, Engine.get_camera().projection_matrix)
+        GL.glUniformMatrix4fv(self._get_uniform_location("viewMatrix"), 1, GL.GL_FALSE, Engine.get_camera().view_matrix)
 
     def _create_uniform(self, name: str) -> None:
         uniform_location: int = GL.glGetUniformLocation(self._program, name)
