@@ -1,2 +1,1 @@
-finish making the entity and meshinstance class
-make sure GL stuff is cleaned up properly
+fix camera rotation

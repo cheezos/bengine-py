@@ -13,7 +13,8 @@ class Sandbox(Game):
         self.c = Freecam()
 
     def update(self, delta_time: float) -> None:
-        self.m.translate(delta_time, 0, 0)
+        pass
+        # Engine.get_camera().rotate(delta_time, 0, 0)
 
     def quit(self) -> None: pass
 

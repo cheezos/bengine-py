@@ -26,6 +26,7 @@ class Shader:
 
     def _update(self, ent: Entity) -> None:
         GL.glUseProgram(self._program)
+        GL.glUniform1i(self._get_uniform_location("textureSample"), 0)
         GL.glUniformMatrix4fv(self._get_uniform_location("transformMatrix"), 1, GL.GL_FALSE, ent.transform_matrix)
         GL.glUniformMatrix4fv(self._get_uniform_location("projectionMatrix"), 1, GL.GL_FALSE, Engine.get_camera().projection_matrix)
         GL.glUniformMatrix4fv(self._get_uniform_location("viewMatrix"), 1, GL.GL_FALSE, Engine.get_camera().view_matrix)

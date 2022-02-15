@@ -2,6 +2,7 @@ import math
 import numpy as np
 import pyrr
 from bengine.entities import Entities
+from bengine.window import Window
 
 class Entity:
     def __init__(self, **kwargs) -> None:
@@ -27,13 +28,13 @@ class Entity:
 
     def set_position(self, x: float, y: float, z: float) -> None:
         self._position = np.array([x, y, z], dtype=np.float32)
+    
+    def set_rotation(self, x: float, y: float, z: float) -> None:
+        self._rotation = np.array([x, y, z], dtype=np.float32)
 
     def translate(self, x: float, y: float, z: float) -> None:
         p = self._position
         self._position = np.array([p[0] + x, p[1] + y, p[2] + z], dtype=np.float32)
-    
-    def set_rotation(self, x: float, y: float, z: float) -> None:
-        self._rotation = np.array([x, y, z], dtype=np.float32)
 
     def rotate(self, x: float, y: float, z: float) -> None:
         r = self._rotation
@@ -82,7 +83,9 @@ class Entity:
 
     @property
     def right(self) -> np.ndarray:
-        return pyrr.vector3.cross(np.array([0, 1, 0], dtype=np.float32), self.forward)
+        z = float(math.sin(math.radians(self._rotation[1])))
+        x = float(math.cos(math.radians(self._rotation[1])))
+        return np.array([x, 0, z], dtype=np.float32)
 
     @property
     def up(self) -> np.ndarray:
@@ -92,5 +95,4 @@ class Entity:
     def transform_matrix(self) -> np.ndarray:
         r_matrix = pyrr.matrix44.create_from_eulers(self._rotation, dtype=np.float32)
         p_matrix = pyrr.matrix44.create_from_translation(self._position, dtype=np.float32)
-        # return pyrr.matrix44.create_from_translation(self._position, dtype=np.float32)
         return pyrr.matrix44.multiply(r_matrix, p_matrix)

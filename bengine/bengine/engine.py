@@ -24,7 +24,7 @@ class Engine(object):
     def _start_engine(title: str) -> None:
         assert Engine._game is not None
 
-        Window.create_window(title, 1280, 720)
+        Window.create_window(title, 1920, 1080)
         Input.init()
         Engine._camera = Camera()
         Engine._game.init()
