@@ -8,8 +8,8 @@ from bengine.entity_manager import EntityManager
 from bengine.loader import Loader
 from bengine.camera import Camera
 
-_game: Game | None = None
-_camera: Camera | None = None
+_game: Game
+_camera: Camera
 _quit: bool = False
 
 def init(game: Game, title: str) -> None:
@@ -24,11 +24,11 @@ def init(game: Game, title: str) -> None:
 
 def _start_engine(title: str) -> None:
     assert _game is not None
+    global _camera
 
     Window.create_window(title, 1280, 720)
-    
-    _game.on_init()
     _camera = Camera()
+    _game.on_init()
 
     while not _should_close():
         Window.update()
@@ -64,3 +64,6 @@ def _should_close() -> bool:
         _quit = True
 
     return _quit
+
+def get_camera() -> Camera:
+    return _camera

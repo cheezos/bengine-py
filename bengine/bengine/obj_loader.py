@@ -73,4 +73,5 @@ class OBJLoader(object):
                 line = f.readline()
         
         vertices = np.array(vertices, dtype=np.float32)
+        print(f"Loaded {model_path}")
         return vertices

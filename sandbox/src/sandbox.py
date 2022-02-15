@@ -8,6 +8,9 @@ class Sandbox(bengine.Game):
 
     def on_init(self) -> None:
         MeshInstance("models/b.obj", position=np.array([0, 0, -5]))
+        MeshInstance("models/b.obj", position=np.array([0, 0, 5]))
+        MeshInstance("models/b.obj", position=np.array([-5, 0, 5]))
+        MeshInstance("models/b.obj", position=np.array([5, 0, 0]))
 
     def on_update(self, delta_time: float) -> None:
         pass

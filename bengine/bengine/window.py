@@ -1,5 +1,7 @@
 import glfw
 from OpenGL import GL
+import numpy as np
+import pyrr
 
 class Window(object):
     _window: glfw._GLFWwindow | None = None
@@ -40,7 +42,7 @@ class Window(object):
         pos_x = int((mon_width / 2) - (width / 2))
         pos_y = int((mon_height / 2) - (height / 2))
 
-        glfw.swap_interval(1) # vsync
+        glfw.swap_interval(0) # vsync
         glfw.set_window_attrib(Window._window, glfw.RESIZABLE, glfw.TRUE) # resizable
 
         glfw.set_window_pos(Window._window, pos_x, pos_y)
@@ -64,7 +66,7 @@ class Window(object):
         glfw.swap_buffers(Window._window)
         glfw.poll_events()
 
-        GL.glClearColor(0.2, 0.2, 0.2, 1)
+        GL.glClearColor(0.1, 0.1, 0.1, 1)
         GL.glClear(int(GL.GL_COLOR_BUFFER_BIT) | int(GL.GL_DEPTH_BUFFER_BIT))
 
         Window._delta_time = glfw.get_time() - Window._last_time

@@ -11,9 +11,10 @@ class Texture:
         GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self._texture.width, self._texture.height, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, self._data)
 
     def update(self) -> None:
+        GL.glActiveTexture(GL.GL_TEXTURE0)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._textures)
     
-    def cleanup(self) -> None:
+    def destroy(self) -> None:
         GL.glDeleteTextures(1, self._textures)
