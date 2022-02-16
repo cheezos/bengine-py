@@ -31,3 +31,8 @@ class Freecam(Entity):
 
         if Input.get_cursor_state() == glfw.CURSOR_DISABLED:
             self.rotate(Input.get_mouse_delta()[1] * delta_time * 50, -Input.get_mouse_delta()[0] * delta_time * 50, 0)
+            if self.rotation.x > 85:
+                self.rotation.x = 85
+            
+            if self.rotation.x < -85:
+                self.rotation.x = -85
