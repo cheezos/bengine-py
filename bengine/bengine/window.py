@@ -1,7 +1,5 @@
 import glfw
 from OpenGL import GL
-import numpy as np
-import pyrr
 
 class Window(object):
     _window: glfw._GLFWwindow | None = None

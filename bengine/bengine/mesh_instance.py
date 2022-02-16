@@ -5,13 +5,13 @@ from bengine.texture import Texture
 from bengine.shader import Shader
 
 class MeshInstance(Entity):
-    def __init__(self, model_file: str, texture_file: str, vertex_shader_file: str, fragment_shader_file: str, **kwargs) -> None:
+    def __init__(self, model_file: str, texture_file: str, shader_folder: str, **kwargs) -> None:
         __name__ = "MeshInstance"
         super().__init__(**kwargs)
 
         self._model: Model = Model(model_file)
         self._texture: Texture = Texture(texture_file)
-        self._shader: Shader = Shader(vertex_shader_file, fragment_shader_file)        
+        self._shader: Shader = Shader(shader_folder)        
     
     def _process(self, delta_time: float) -> None:
         super()._process(delta_time)

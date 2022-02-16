@@ -16,16 +16,9 @@ class Engine(object):
     @staticmethod
     def init(game: Game, game_root_directory: str) -> None:
         Engine._game = game
-        Loader.init(game_root_directory)
-
-        engine_thread = threading.Thread(target=Engine._start_engine)
-        engine_thread.start()
-
-    @staticmethod
-    def _start_engine() -> None:
-        assert Engine._game is not None
 
         Window.create_window(Engine._game.__class__.__name__, 1920, 1080)
+        Loader.init(game_root_directory)
         Input.init()
         Engine._camera = Camera()
         Engine._game.init()

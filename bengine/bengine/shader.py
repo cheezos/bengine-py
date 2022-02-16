@@ -4,9 +4,9 @@ from bengine.entity import Entity
 from bengine.engine import Engine
 
 class Shader:
-    def __init__(self, vertex_file: str, fragment_file: str) -> None:
+    def __init__(self, shader_folder: str) -> None:
         self._uniforms: dict[str, int] = {}
-        self._program: int = Loader.load_shader(vertex_file, fragment_file)
+        self._program: int = Loader.load_shader(shader_folder)
         
         GL.glUseProgram(self._program)
         GL.glEnable(GL.GL_DEPTH_TEST)

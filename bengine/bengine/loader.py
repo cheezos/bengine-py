@@ -41,7 +41,7 @@ class Loader(object):
         Loader._resource_paths.append(res_path)
         print(f"Added '{res_path}' to Loader paths")
 
-        # preload
+        Loader._preload_everything()
 
     @staticmethod
     def get_resource(resource_path: str) -> str:
@@ -74,23 +74,21 @@ class Loader(object):
         print("Cleaned up resources")
 
     @staticmethod
-    def load_shader(vertex_file: str, fragment_file: str) -> int:
-        key = f"{vertex_file}:{fragment_file}"
-
-        if key in Loader._shaders.keys():
-            print(f"Using existing shader '{key}'")
-            return Loader._shaders[key]
+    def load_shader(shader_folder: str) -> int:
+        if shader_folder in Loader._shaders.keys():
+            print(f"Using existing shader '{shader_folder}'")
+            return Loader._shaders[shader_folder]
         else:
-            vertex_code = open(Loader.get_resource(f"shaders/{vertex_file}"), "r")
-            fragment_code = open(Loader.get_resource(f"shaders/{fragment_file}"), "r")
+            vertex_code = open(Loader.get_resource(f"shaders/{shader_folder}/vertex.glsl"), "r")
+            fragment_code = open(Loader.get_resource(f"shaders/{shader_folder}/fragment.glsl"), "r")
             shader: int = shaders.compileProgram(
                 shaders.compileShader(vertex_code, GL.GL_VERTEX_SHADER),
                 shaders.compileShader(fragment_code, GL.GL_FRAGMENT_SHADER),
             )
             vertex_code.close()
             fragment_code.close()
-            Loader._shaders[key] = shader
-            print(f"Loaded shader '{vertex_file}' '{fragment_file}'")
+            Loader._shaders[shader_folder] = shader
+            print(f"Loaded shader '{shader_folder}'")
             return shader
 
     @staticmethod
@@ -115,7 +113,7 @@ class Loader(object):
             print(f"Using existing model '{model_path}'")
             return Loader._vertex_objects[model_path]
         else:
-            vertices = Loader.load_obj(model_path)
+            vertices = Loader._load_obj(model_path)
             vertex_count = int(len(vertices) / 8)
             vao = GL.glGenVertexArrays(1)
             GL.glBindVertexArray(vao)
@@ -134,7 +132,7 @@ class Loader(object):
             return vo
 
     @staticmethod
-    def load_obj(model_path: str) -> np.ndarray:
+    def _load_obj(model_path: str) -> np.ndarray:
         if model_path in Loader._vertices.keys():
             print(f"Using existing OBJ '{model_path}'")
             return Loader._vertices[model_path]
@@ -212,3 +210,34 @@ class Loader(object):
             Loader._vertices[model_path] = vertices
             print(f"Loaded obj '{model_path}'")
             return vertices
+
+    @staticmethod
+    def _preload_everything() -> None:
+        print("\nPreloading resources...\n")
+        
+        for resource_path in Loader._resource_paths:
+            shaders_path = f"{resource_path}shaders/"
+            print(f"Preloading shaders from '{shaders_path}'")
+            shaders = os.listdir(shaders_path)
+
+            for shader in shaders:
+                if shader != "__pycache__":
+                    Loader.load_shader(shader)
+            
+            textures_path = f"{resource_path}textures/"
+            print(f"Preloading textures from '{textures_path}'")
+            textures = os.listdir(textures_path)
+
+            for texture in textures:
+                if texture.endswith(".png"):
+                    Loader.load_texture(texture)
+
+            models_path = f"{resource_path}models/"
+            print(f"Preloading models from '{models_path}'")
+            models = os.listdir(models_path)
+
+            for model in models:
+                if model.endswith(".obj"):
+                    Loader.load_model(model)
+
+        print("\nPreload complete\n")
