@@ -14,9 +14,10 @@ class Engine(object):
     _quit: bool = False
 
     @staticmethod
-    def init(game: Game) -> None:
+    def init(game: Game, game_root_directory: str) -> None:
         Engine._game = game
-        
+        Loader.init(game_root_directory)
+
         engine_thread = threading.Thread(target=Engine._start_engine)
         engine_thread.start()
 
@@ -24,7 +25,6 @@ class Engine(object):
     def _start_engine() -> None:
         assert Engine._game is not None
 
-        Loader.init(Engine._game.root_directory)
         Window.create_window(Engine._game.__class__.__name__, 1920, 1080)
         Input.init()
         Engine._camera = Camera()

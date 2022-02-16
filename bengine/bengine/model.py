@@ -1,10 +1,10 @@
 import ctypes
-from bengine.obj_loader import OBJLoader
+from bengine.loader import Loader
 from OpenGL import GL
 
 class Model:
     def __init__(self, model_path: str) -> None:
-        self._vertices = OBJLoader.load(model_path)
+        self._vertices = Loader.load_obj(model_path)
         self._vertex_count = int(len(self._vertices) / 8)
         
         # Vertex Array Object

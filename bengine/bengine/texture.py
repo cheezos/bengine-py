@@ -3,8 +3,8 @@ from PIL import Image
 from OpenGL import GL
 
 class Texture:
-    def __init__(self, texture_path: str) -> None:
-        self._texture: Image.Image = Loader.load_texture(texture_path)
+    def __init__(self, texture_file: str) -> None:
+        self._texture: Image.Image = Loader.load_texture(texture_file)
         self._data: bytes = self._texture.convert("RGBA").tobytes()
         self._textures = GL.glGenTextures(1)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self._textures)
