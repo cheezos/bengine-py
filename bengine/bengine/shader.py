@@ -21,7 +21,6 @@ class Shader:
 
     def destroy(self) -> None:
         GL.glUseProgram(0)
-        # GL.glDeleteProgram(self._program)
 
     def _update(self, ent: Entity) -> None:
         GL.glUseProgram(self._program)

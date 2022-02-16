@@ -1,9 +1,9 @@
 import ctypes
 import os
 import numpy as np
-from PIL import Image
 from OpenGL import GL
 from OpenGL.GL import shaders
+from PIL import Image
 
 class Loader(object):
     _resource_paths: list[str] = [
@@ -45,13 +45,15 @@ class Loader(object):
 
     @staticmethod
     def get_resource(resource_path: str) -> str:
+        abs_path = ""
+        
         for path in Loader._resource_paths:
             abs_path = Loader.get_abs_path(f"{path}{resource_path}")
 
             if os.path.exists(abs_path):
                 return abs_path
 
-        raise Exception(f"Failed to get resource at '{resource_path}'")
+        raise Exception(f"Failed to get resource at '{abs_path}'")
 
     @staticmethod
     def get_abs_path(path: str) -> str:        
@@ -134,7 +136,7 @@ class Loader(object):
     @staticmethod
     def load_obj(model_path: str) -> np.ndarray:
         if model_path in Loader._vertices.keys():
-            print(f"Using existing obj '{model_path}'")
+            print(f"Using existing OBJ '{model_path}'")
             return Loader._vertices[model_path]
         else:
             v = []

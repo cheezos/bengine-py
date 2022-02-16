@@ -1,25 +1,24 @@
 import sys
 from cx_Freeze import setup, Executable
 
-# Dependencies are automatically detected, but it might need fine tuning.
-# "packages": ["os"] is used as example only
 build_exe_options = {
     "build_exe": "build",
-    "optimize": 2,
-    "includes" : ["OpenGL.platform.win32"],
-    "packages": ["bengine"],
+    "optimize": 1,
+    "include_files": ["C:/Users/colto/Documents/Github/bepto-engine/bengine/bengine/resources/"],
+    "includes" : ["pyrr", "numpy", "OpenGL.platform.win32"],
+    "packages": ["os", "numpy", "pyrr", "OpenGL", "glfw", "bengine"],
     "excludes": ["tkinter"]
    }
 
-# base="Win32GUI" should be used only for Windows GUI app
 base = None
-if sys.platform == "win32":
-    base = "Win32GUI"
+
+# if sys.platform == "win32":
+#     base = "Win32GUI"
 
 setup(
     name = "Sandbox",
     version = "0.1",
     description = "Sandbox in Bengine",
     options = {"build_exe": build_exe_options},
-    executables = [Executable("./src/main.py", base=base)]
+    executables = [Executable("./src/sandbox.py", base=base)]
 )
