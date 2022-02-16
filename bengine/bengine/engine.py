@@ -40,8 +40,6 @@ class Engine(object):
 
     @staticmethod
     def _cleanup() -> None:
-        print("Cleaning up...")
-
         Engine._game.quit()
         Entities.cleanup()
         Loader.cleanup()

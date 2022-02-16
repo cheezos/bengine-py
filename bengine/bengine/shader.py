@@ -1,4 +1,3 @@
-from OpenGL.GL import shaders
 from OpenGL import GL
 from bengine.loader import Loader
 from bengine.entity import Entity
@@ -7,7 +6,7 @@ from bengine.engine import Engine
 class Shader:
     def __init__(self, vertex_file: str, fragment_file: str) -> None:
         self._uniforms: dict[str, int] = {}
-        self._program: shaders.ShaderProgram = Loader.load_shader(vertex_file, fragment_file)
+        self._program: int = Loader.load_shader(vertex_file, fragment_file)
         
         GL.glUseProgram(self._program)
         GL.glEnable(GL.GL_DEPTH_TEST)
@@ -22,7 +21,7 @@ class Shader:
 
     def destroy(self) -> None:
         GL.glUseProgram(0)
-        GL.glDeleteProgram(self._program)
+        # GL.glDeleteProgram(self._program)
 
     def _update(self, ent: Entity) -> None:
         GL.glUseProgram(self._program)

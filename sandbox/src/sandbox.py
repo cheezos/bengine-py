@@ -11,13 +11,16 @@ class Sandbox(Game):
 
     def init(self) -> None:
         self.c = Freecam()
-        self.b = MeshInstance("models/b.obj")
-        self.b.translate(0, 0, -5)
-        self.f = MeshInstance("models/floor.obj")
+        self.b1 = MeshInstance("b.obj", "base.png", "unlit_vertex.glsl", "unlit_fragment.glsl")
+        self.b1.translate(0, 0, -5)
+        self.b2 = MeshInstance("b.obj", "base2.png", "unlit_vertex.glsl", "unlit_fragment.glsl")
+        self.b2.translate(0, 0, 5)
+        self.f = MeshInstance("floor.obj", "base.png", "unlit_vertex.glsl", "unlit_fragment.glsl")
         self.f.translate(0, -3, 0)
 
     def update(self, delta_time: float) -> None:
-        self.b.rotate(delta_time, delta_time, delta_time)
+        self.b1.rotate(delta_time, delta_time, delta_time)
+        self.b2.rotate(-delta_time, -delta_time, -delta_time)
 
     def quit(self) -> None: pass
 

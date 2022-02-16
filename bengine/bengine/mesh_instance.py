@@ -5,13 +5,13 @@ from bengine.texture import Texture
 from bengine.shader import Shader
 
 class MeshInstance(Entity):
-    def __init__(self, model_path: str, **kwargs) -> None:
+    def __init__(self, model_file: str, texture_file: str, vertex_shader_file: str, fragment_shader_file: str, **kwargs) -> None:
         __name__ = "MeshInstance"
         super().__init__(**kwargs)
 
-        self._model: Model = Model(model_path)
-        self._texture: Texture = Texture("base.png")
-        self._shader: Shader = Shader("unlit_vertex.glsl", "unlit_fragment.glsl")        
+        self._model: Model = Model(model_file)
+        self._texture: Texture = Texture(texture_file)
+        self._shader: Shader = Shader(vertex_shader_file, fragment_shader_file)        
     
     def _process(self, delta_time: float) -> None:
         super()._process(delta_time)
@@ -24,5 +24,5 @@ class MeshInstance(Entity):
 
     def destroy(self) -> None:
         self._model.destroy()
-        self._texture.destroy()
         self._shader.destroy()
+        self._texture.destroy()

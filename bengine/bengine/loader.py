@@ -1,3 +1,4 @@
+import ctypes
 import os
 import numpy as np
 from PIL import Image
@@ -8,6 +9,11 @@ class Loader(object):
     _resource_paths: list[str] = [
         "bengine/bengine/resources/"
     ]
+
+    _shaders: dict[str, int] = {}
+    _textures: dict[str, int] = {}
+    _vertices: dict[str, np.ndarray] = {}
+    _vertex_objects: dict[str, tuple[int, int, int]] = {}
 
     @staticmethod
     def init(game_root_directory: str) -> None:
@@ -37,26 +43,6 @@ class Loader(object):
 
         # preload
 
-
-    @staticmethod
-    def load_shader(vertex_file: str, fragment_file: str) -> shaders.ShaderProgram:
-        vertex_code = open(Loader.get_resource(f"shaders/{vertex_file}"), "r")
-        fragment_code = open(Loader.get_resource(f"shaders/{fragment_file}"), "r")
-        shader: int = shaders.compileProgram(
-            shaders.compileShader(vertex_code, GL.GL_VERTEX_SHADER),
-            shaders.compileShader(fragment_code, GL.GL_FRAGMENT_SHADER),
-        )
-        vertex_code.close()
-        fragment_code.close()
-        
-        return shader
-
-    @staticmethod
-    def load_texture(texture_file: str) -> Image.Image:
-        texture = Image.open(Loader.get_resource(f"textures/{texture_file}"))
-        texture = texture.transpose(Image.FLIP_TOP_BOTTOM)
-        return texture
-
     @staticmethod
     def get_resource(resource_path: str) -> str:
         for path in Loader._resource_paths:
@@ -72,79 +58,155 @@ class Loader(object):
         return os.path.join(os.path.abspath("."), path)
 
     @staticmethod
-    def cleanup() -> None: pass
+    def cleanup() -> None:
+        for shader in Loader._shaders.values():
+            GL.glDeleteProgram(shader)
+        
+        for texture in Loader._textures.values():
+            GL.glDeleteTextures(1, (texture,))
+        
+        for vertex_objects in Loader._vertex_objects.values():
+            GL.glDeleteVertexArrays(1, (vertex_objects[0],))
+            GL.glDeleteBuffers(1, (vertex_objects[1],))
+
+        print("Cleaned up resources")
+
+    @staticmethod
+    def load_shader(vertex_file: str, fragment_file: str) -> int:
+        key = f"{vertex_file}:{fragment_file}"
+
+        if key in Loader._shaders.keys():
+            print(f"Using existing shader '{key}'")
+            return Loader._shaders[key]
+        else:
+            vertex_code = open(Loader.get_resource(f"shaders/{vertex_file}"), "r")
+            fragment_code = open(Loader.get_resource(f"shaders/{fragment_file}"), "r")
+            shader: int = shaders.compileProgram(
+                shaders.compileShader(vertex_code, GL.GL_VERTEX_SHADER),
+                shaders.compileShader(fragment_code, GL.GL_FRAGMENT_SHADER),
+            )
+            vertex_code.close()
+            fragment_code.close()
+            Loader._shaders[key] = shader
+            print(f"Loaded shader '{vertex_file}' '{fragment_file}'")
+            return shader
+
+    @staticmethod
+    def load_texture(texture_file: str) -> int:
+        if texture_file in Loader._textures.keys():
+            print(f"Using existing texture '{texture_file}'")
+            return Loader._textures[texture_file]
+        else:
+            image = Image.open(Loader.get_resource(f"textures/{texture_file}"))
+            image = image.transpose(Image.FLIP_TOP_BOTTOM)
+            data: bytes = image.convert("RGBA").tobytes()
+            texture = GL.glGenTextures(1)
+            GL.glBindTexture(GL.GL_TEXTURE_2D, texture)
+            GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, image.width, image.height, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data)
+            Loader._textures[texture_file] = texture
+            print(f"Loaded texture '{texture_file}'")
+            return texture
+        
+    @staticmethod
+    def load_model(model_path: str) -> tuple[int, int, int]:
+        if model_path in Loader._vertex_objects.keys():
+            print(f"Using existing model '{model_path}'")
+            return Loader._vertex_objects[model_path]
+        else:
+            vertices = Loader.load_obj(model_path)
+            vertex_count = int(len(vertices) / 8)
+            vao = GL.glGenVertexArrays(1)
+            GL.glBindVertexArray(vao)
+            vbo = GL.glGenBuffers(1)
+            GL.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo)
+            GL.glBufferData(GL.GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL.GL_STATIC_DRAW)
+            GL.glEnableVertexAttribArray(0)
+            GL.glVertexAttribPointer(0, 3, GL.GL_FLOAT, GL.GL_FALSE, vertices.itemsize * 8, ctypes.c_void_p(0))
+            GL.glEnableVertexAttribArray(1)
+            GL.glVertexAttribPointer(1, 2, GL.GL_FLOAT, GL.GL_FALSE, vertices.itemsize * 8, ctypes.c_void_p(12))
+            GL.glEnableVertexAttribArray(2)
+            GL.glVertexAttribPointer(2, 3, GL.GL_FLOAT, GL.GL_FALSE, vertices.itemsize * 8, ctypes.c_void_p(20))
+            vo = (vao, vbo, vertex_count)
+            Loader._vertex_objects[model_path] = vo
+            print(f"Loaded model '{model_path}'")
+            return vo
 
     @staticmethod
     def load_obj(model_path: str) -> np.ndarray:
-        v = []
-        vt = []
-        vn = []
-        vertices = []
-        
-        with open(Loader.get_resource(model_path), "r") as f:
-            line = f.readline()
+        if model_path in Loader._vertices.keys():
+            print(f"Using existing obj '{model_path}'")
+            return Loader._vertices[model_path]
+        else:
+            v = []
+            vt = []
+            vn = []
+            vertices = []
             
-            while line:
-                first_space = line.find(" ")
-                flag = line[0:first_space]
-                
-                if flag == "mtllib":
-                    # ignore the material flag
-                    pass
-                elif flag == "v":
-                    # vertex
-                    line = line.replace("v ", "")
-                    line = line.split(" ")
-                    l = [float(x) for x in line]
-                    v.append(l)
-                elif flag == "vt":
-                    line = line.replace("vt ", "")
-                    line = line.split(" ")
-                    l = [float(x) for x in line]
-                    vt.append(l)
-                elif flag == "vn":
-                    line = line.replace("vn ", "")
-                    line = line.split(" ")
-                    l = [float(x) for x in line]
-                    vn.append(l)
-                elif flag == "f":
-                    line = line.replace("f ", "")
-                    line = line.replace("\n", "")
-                    line = line.split(" ")
-                    verts = []
-                    texts = []
-                    norms = []
-                    
-                    for _v in line:
-                        l = _v.split("/")
-                        position = int(l[0]) - 1
-                        verts.append(v[position])
-                        texture = int(l[1]) - 1
-                        texts.append(vt[texture])
-                        normal = int(l[2]) - 1
-                        norms.append(vn[normal])
-                    
-                    tri_in_face = len(line) - 2
-                    vertex_order = []
-                    
-                    for _i in range(tri_in_face):
-                        vertex_order.append(0)
-                        vertex_order.append(_i + 1)
-                        vertex_order.append(_i + 2)
-                    
-                    for _i in vertex_order:
-                        for _x in verts[_i]:
-                            vertices.append(_x)
-                        
-                        for _x in texts[_i]:
-                            vertices.append(_x)
-                        
-                        for _x in norms[_i]:
-                            vertices.append(_x)
-                
+            with open(Loader.get_resource(f"models/{model_path}"), "r") as f:
                 line = f.readline()
-        
-        vertices = np.array(vertices, dtype=np.float32)
-        f.close()
-        print(f"Loaded '{model_path}'")
-        return vertices
+                
+                while line:
+                    first_space = line.find(" ")
+                    flag = line[0:first_space]
+                    
+                    if flag == "mtllib":
+                        # ignore the material flag
+                        pass
+                    elif flag == "v":
+                        # vertex
+                        line = line.replace("v ", "")
+                        line = line.split(" ")
+                        l = [float(x) for x in line]
+                        v.append(l)
+                    elif flag == "vt":
+                        line = line.replace("vt ", "")
+                        line = line.split(" ")
+                        l = [float(x) for x in line]
+                        vt.append(l)
+                    elif flag == "vn":
+                        line = line.replace("vn ", "")
+                        line = line.split(" ")
+                        l = [float(x) for x in line]
+                        vn.append(l)
+                    elif flag == "f":
+                        line = line.replace("f ", "")
+                        line = line.replace("\n", "")
+                        line = line.split(" ")
+                        verts = []
+                        texts = []
+                        norms = []
+                        
+                        for _v in line:
+                            l = _v.split("/")
+                            position = int(l[0]) - 1
+                            verts.append(v[position])
+                            texture = int(l[1]) - 1
+                            texts.append(vt[texture])
+                            normal = int(l[2]) - 1
+                            norms.append(vn[normal])
+                        
+                        tri_in_face = len(line) - 2
+                        vertex_order = []
+                        
+                        for _i in range(tri_in_face):
+                            vertex_order.append(0)
+                            vertex_order.append(_i + 1)
+                            vertex_order.append(_i + 2)
+                        
+                        for _i in vertex_order:
+                            for _x in verts[_i]:
+                                vertices.append(_x)
+                            
+                            for _x in texts[_i]:
+                                vertices.append(_x)
+                            
+                            for _x in norms[_i]:
+                                vertices.append(_x)
+                    
+                    line = f.readline()
+            
+            vertices = np.array(vertices, dtype=np.float32)
+            f.close()
+            Loader._vertices[model_path] = vertices
+            print(f"Loaded obj '{model_path}'")
+            return vertices
