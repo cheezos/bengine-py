@@ -4,8 +4,8 @@ from bengine.window import Window
 class Input(object):
     _pressed_keys: list[int] = []
     _cursor_state: int = glfw.CURSOR_NORMAL
-    _mouse_last_pos: tuple[float, float] = (0, 0)
-    _mouse_delta: tuple[float, float] = (0, 0)
+    _mouse_last_pos: tuple[float, float] = (0.0, 0.0)
+    _mouse_delta: tuple[float, float] = (0.0, 0.0)
 
     @staticmethod
     def init() -> None:
@@ -13,7 +13,7 @@ class Input(object):
 
     @staticmethod
     def end_frame() -> None:
-        Input._mouse_delta = (0, 0)
+        Input._mouse_delta = (0.0, 0.0)
 
     @staticmethod
     def is_action_pressed(action: int) -> bool:

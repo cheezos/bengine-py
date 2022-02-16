@@ -76,7 +76,7 @@ class Loader(object):
     @staticmethod
     def load_shader(shader_folder: str) -> int:
         if shader_folder in Loader._shaders.keys():
-            print(f"Using existing shader '{shader_folder}'")
+            print(f"Using shader '{shader_folder}'")
             return Loader._shaders[shader_folder]
         else:
             vertex_code = open(Loader.get_resource(f"shaders/{shader_folder}/vertex.glsl"), "r")
@@ -94,7 +94,7 @@ class Loader(object):
     @staticmethod
     def load_texture(texture_file: str) -> int:
         if texture_file in Loader._textures.keys():
-            print(f"Using existing texture '{texture_file}'")
+            print(f"Using texture '{texture_file}'")
             return Loader._textures[texture_file]
         else:
             image = Image.open(Loader.get_resource(f"textures/{texture_file}"))
@@ -110,7 +110,7 @@ class Loader(object):
     @staticmethod
     def load_model(model_path: str) -> tuple[int, int, int]:
         if model_path in Loader._vertex_objects.keys():
-            print(f"Using existing model '{model_path}'")
+            print(f"Using model '{model_path}'")
             return Loader._vertex_objects[model_path]
         else:
             vertices = Loader._load_obj(model_path)
@@ -134,7 +134,7 @@ class Loader(object):
     @staticmethod
     def _load_obj(model_path: str) -> np.ndarray:
         if model_path in Loader._vertices.keys():
-            print(f"Using existing OBJ '{model_path}'")
+            print(f"Using OBJ '{model_path}'")
             return Loader._vertices[model_path]
         else:
             v = []
@@ -218,26 +218,32 @@ class Loader(object):
         for resource_path in Loader._resource_paths:
             shaders_path = f"{resource_path}shaders/"
             print(f"Preloading shaders from '{shaders_path}'")
-            shaders = os.listdir(shaders_path)
 
-            for shader in shaders:
-                if shader != "__pycache__":
-                    Loader.load_shader(shader)
+            if os.path.exists(shaders_path):
+                shaders = os.listdir(shaders_path)
+
+                for shader in shaders:
+                    if shader != "__pycache__":
+                        Loader.load_shader(shader)
             
             textures_path = f"{resource_path}textures/"
             print(f"Preloading textures from '{textures_path}'")
-            textures = os.listdir(textures_path)
 
-            for texture in textures:
-                if texture.endswith(".png"):
-                    Loader.load_texture(texture)
+            if os.path.exists(textures_path):
+                textures = os.listdir(textures_path)
+
+                for texture in textures:
+                    if texture.endswith(".png"):
+                        Loader.load_texture(texture)
 
             models_path = f"{resource_path}models/"
             print(f"Preloading models from '{models_path}'")
-            models = os.listdir(models_path)
 
-            for model in models:
-                if model.endswith(".obj"):
-                    Loader.load_model(model)
+            if os.path.exists(models_path):        
+                models = os.listdir(models_path)
+
+                for model in models:
+                    if model.endswith(".obj"):
+                        Loader.load_model(model)
 
         print("\nPreload complete\n")

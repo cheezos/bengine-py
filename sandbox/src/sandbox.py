@@ -18,6 +18,11 @@ class Sandbox(Game):
         self.f = MeshInstance("floor.obj", "base.png", "unlit")
         self.f.translate(0, -3, 0)
 
+        for x in range(-3, 3, 1):
+            for y in range(-3, 3, 1):
+                m = MeshInstance("b.obj", "base2.png", "unlit")
+                m.translate(x * 2, 5, y * 2)
+
     def update(self, delta_time: float) -> None:
         self.b1.rotate(delta_time, delta_time, delta_time)
         self.b2.rotate(-delta_time, -delta_time, -delta_time)
