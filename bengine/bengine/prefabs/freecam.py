@@ -40,10 +40,10 @@ class Freecam(Entity):
     def _handle_mouse(self, delta_time: float) -> None:
         mx = Input.get_mouse_position()[0]
         my = Input.get_mouse_position()[1]
-        dy = mx - self.last_mouse_pos[0]
-        dx = my - self.last_mouse_pos[1]
+        dy = (mx - self.last_mouse_pos[0]) * delta_time * 5
+        dx = (my - self.last_mouse_pos[1]) * delta_time * 5
         self.last_mouse_pos = (mx, my)
-        self.rotate(dx * 0.1, -dy * 0.1, 0)
+        self.rotate(dx, -dy, 0)
 
         if self.rotation.x > 85:
             self.rotation.x = 85

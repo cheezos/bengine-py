@@ -41,9 +41,8 @@ class Window(object):
         pos_x = int((mon_width / 2) - (width / 2))
         pos_y = int((mon_height / 2) - (height / 2))
 
-        glfw.swap_interval(1) # vsync
-        glfw.set_window_attrib(Window._window, glfw.RESIZABLE, glfw.TRUE) # resizable
-
+        glfw.swap_interval(1)
+        glfw.set_window_attrib(Window._window, glfw.RESIZABLE, glfw.TRUE)
         glfw.set_window_pos(Window._window, pos_x, pos_y)
         glfw.set_input_mode(Window._window, glfw.RAW_MOUSE_MOTION, glfw.TRUE)
         glfw.set_cursor_pos(Window._window, width / 2, height / 2)
