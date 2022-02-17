@@ -15,12 +15,6 @@ class Engine(object):
 
     @staticmethod
     def init(game: Game, game_root_directory: str) -> None:
-        """Initializes the game engine.
-
-        Args:
-            game (Game): The game class.
-            game_root_directory (str): The game's root directory.
-        """
         Engine._game = game
 
         Window.create_window(Engine._game.__class__.__name__, 1920, 1080)
@@ -34,7 +28,6 @@ class Engine(object):
             Debug.update()
             Entities.update(Window.get_delta_time())
             Engine._game.update(Window.get_delta_time())
-            Input.end_frame()
 
         Engine._cleanup()
 

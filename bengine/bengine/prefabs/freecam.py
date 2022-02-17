@@ -43,7 +43,7 @@ class Freecam(Entity):
         dy = mx - self.last_mouse_pos[0]
         dx = my - self.last_mouse_pos[1]
         self.last_mouse_pos = (mx, my)
-        self.rotate(dx * delta_time * 5, -dy * delta_time * 5, 0)
+        self.rotate(dx * 0.1, -dy * 0.1, 0)
 
         if self.rotation.x > 85:
             self.rotation.x = 85

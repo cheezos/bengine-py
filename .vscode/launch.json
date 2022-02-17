@@ -8,7 +8,7 @@
             "name": "Run Sandbox",
             "type": "python",
             "request": "launch",
-            "program": "C:\\Users\\colto\\Documents\\Github\\bepto-engine\\sandbox\\src\\sandbox.py",
+            "program": "C:\\Users\\colto\\Documents\\Github\\python-opengl-engine\\sandbox\\src\\sandbox.py",
             "console": "integratedTerminal"
         }
     ]

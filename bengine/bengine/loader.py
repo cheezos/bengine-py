@@ -7,7 +7,7 @@ from PIL import Image
 
 class Loader(object):
     _resource_paths: list[str] = [
-        "bengine/bengine/resources/"
+        "/resources/"
     ]
 
     _shaders: dict[str, int] = {}
@@ -41,8 +41,6 @@ class Loader(object):
         Loader._resource_paths.append(res_path)
         print(f"Added '{res_path}' to Loader paths")
 
-        Loader._preload_everything()
-
     @staticmethod
     def get_resource(resource_path: str) -> str:
         abs_path = ""
@@ -56,8 +54,9 @@ class Loader(object):
         raise Exception(f"Failed to get resource at '{abs_path}'")
 
     @staticmethod
-    def get_abs_path(path: str) -> str:        
-        return os.path.join(os.path.abspath("."), path)
+    def get_abs_path(path: str) -> str:
+        abs_path = f"{os.path.dirname(os.path.abspath(__file__))}{path}"
+        return abs_path
 
     @staticmethod
     def cleanup() -> None:
@@ -208,42 +207,5 @@ class Loader(object):
             vertices = np.array(vertices, dtype=np.float32)
             f.close()
             Loader._vertices[model_path] = vertices
-            print(f"Loaded obj '{model_path}' with {vertices.size} vertices")
+            print(f"Loaded obj '{model_path}'")
             return vertices
-
-    @staticmethod
-    def _preload_everything() -> None:
-        print("\nPreloading resources...\n")
-        
-        for resource_path in Loader._resource_paths:
-            shaders_path = f"{resource_path}shaders/"
-            print(f"Preloading shaders from '{shaders_path}'")
-
-            if os.path.exists(shaders_path):
-                shaders = os.listdir(shaders_path)
-
-                for shader in shaders:
-                    if shader != "__pycache__":
-                        Loader.load_shader(shader)
-            
-            textures_path = f"{resource_path}textures/"
-            print(f"Preloading textures from '{textures_path}'")
-
-            if os.path.exists(textures_path):
-                textures = os.listdir(textures_path)
-
-                for texture in textures:
-                    if texture.endswith(".png"):
-                        Loader.load_texture(texture)
-
-            models_path = f"{resource_path}models/"
-            print(f"Preloading models from '{models_path}'")
-
-            if os.path.exists(models_path):        
-                models = os.listdir(models_path)
-
-                for model in models:
-                    if model.endswith(".obj"):
-                        Loader.load_model(model)
-
-        print(f"Preload complete\n")
