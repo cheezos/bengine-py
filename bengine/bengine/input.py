@@ -6,10 +6,14 @@ class Input(object):
     _cursor_state: int = glfw.CURSOR_NORMAL
     _mouse_last_pos: tuple[float, float] = (0.0, 0.0)
     _mouse_delta: tuple[float, float] = (0.0, 0.0)
+    _mouse_position: tuple[float, float] = (0.0, 0.0)
 
     @staticmethod
     def init() -> None:
-        glfw.set_cursor_pos_callback(Window.get_window(), lambda _, x, y: Input._mouse_callback(x, y))
+        if glfw.raw_mouse_motion_supported():
+            glfw.set_input_mode(Window.get_window(), glfw.RAW_MOUSE_MOTION, glfw.TRUE)
+        
+        glfw.set_cursor_pos_callback(Window.get_window(), lambda _, x, y: Input._mouse_pos_callback(x, y))
 
     @staticmethod
     def end_frame() -> None:
@@ -55,14 +59,11 @@ class Input(object):
     @staticmethod
     def get_cursor_state() -> int:
         return Input._cursor_state
+
+    @staticmethod
+    def get_mouse_position() -> tuple[float, float]:
+        return Input._mouse_position
     
     @staticmethod
-    def get_mouse_delta() -> tuple[float, float]:
-        return Input._mouse_delta
-    
-    @staticmethod
-    def _mouse_callback(x: float, y: float) -> None:
-        d_x = x - Input._mouse_last_pos[0]
-        d_y = y - Input._mouse_last_pos[1]
-        Input._mouse_delta = (d_x, d_y)
-        Input._mouse_last_pos = (x, y)
+    def _mouse_pos_callback(x: float, y: float) -> None:
+        Input._mouse_position = (x, y)

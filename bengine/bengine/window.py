@@ -1,5 +1,6 @@
 import glfw
 from OpenGL import GL
+from bengine.config import Config
 
 class Window(object):
     _window: glfw._GLFWwindow | None = None
@@ -71,7 +72,8 @@ class Window(object):
         Window._last_time = glfw.get_time()
         Window._fps = int(1.0 / Window._delta_time)
 
-        glfw.set_window_title(Window._window, f"{Window._title} | FPS: {Window._fps}")
+        debug_info = f"| FPS: {Window._fps}" if Config.get_debug() else ""
+        glfw.set_window_title(Window._window, f"{Window._title} {debug_info}")
 
     @staticmethod
     def cleanup() -> None:

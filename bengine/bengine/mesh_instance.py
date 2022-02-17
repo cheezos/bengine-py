@@ -12,7 +12,7 @@ class MeshInstance(Entity):
         self._model: Model = Model(model_file)
         self._texture: Texture = Texture(texture_file)
         self._shader: Shader = Shader(shader_folder)        
-    
+
     def _process(self, delta_time: float) -> None:
         super()._process(delta_time)
 

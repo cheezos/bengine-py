@@ -103,7 +103,7 @@ class Entity:
         return vec
 
     @property
-    def transform_matrix(self) -> pyrr.Vector3:
+    def transform_matrix(self) -> np.ndarray:
         pos = self._position
         r_matrix = pyrr.matrix44.create_from_eulers(self._rotation, dtype=np.float32)
         p_matrix = pyrr.matrix44.create_from_translation([pos[0], -pos[1], pos[2]], dtype=np.float32)

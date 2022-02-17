@@ -208,7 +208,7 @@ class Loader(object):
             vertices = np.array(vertices, dtype=np.float32)
             f.close()
             Loader._vertices[model_path] = vertices
-            print(f"Loaded obj '{model_path}'")
+            print(f"Loaded obj '{model_path}' with {vertices.size} vertices")
             return vertices
 
     @staticmethod
@@ -246,4 +246,4 @@ class Loader(object):
                     if model.endswith(".obj"):
                         Loader.load_model(model)
 
-        print("\nPreload complete\n")
+        print(f"Preload complete\n")
