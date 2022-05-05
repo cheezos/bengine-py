@@ -1,5 +1,5 @@
 # Bepto Engine
-A simple boilerplate 3D OpenGL Python Game Engine.
+A simple boilerplate 3D OpenGL Python game engine.
 
 ### How to run
 - Install/Update pip `python -m ensurepip --upgrade`.
