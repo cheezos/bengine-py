@@ -1,6 +1,6 @@
 ## Bepto Engine Py
 
-A basic 3D OpenGL Python Game Engine.
+A 3D python game engine.
 
 ## Setup & Run
 
