@@ -2,17 +2,17 @@
 
 A basic 3D OpenGL Python Game Engine.
 
-## Setup
+## Setup & Run
 
 Install the dependencies `pip install -r requirements.txt`.
 
 ### Run from source
 
-Run the project by running `sandbox.py` in the `sandbox/src` directory.
+Navigate to the `sandbox/src` directory and run `python sandbox.py`.
 
 ### Build
 
-Build the project by running `python build_sandbox.py`.
+Run `python build_sandbox.py` to build the project.
 
 The executable is located in `sandbox/build`.
 
