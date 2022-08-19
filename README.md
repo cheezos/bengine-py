@@ -4,7 +4,11 @@ A basic 3D OpenGL Python Game Engine.
 
 ## Setup & Run
 
-Install the dependencies `pip install -r requirements.txt`.
+1. Clone and open the project directory in a terminal.
+
+2. Install the dependencies `pip install -r requirements.txt`.
+
+3. Install the `bengine` package locally `pip install -e bengine`.
 
 ### Run from source
 
@@ -12,7 +16,7 @@ Navigate to the `sandbox/src` directory and run `python sandbox.py`.
 
 ### Build
 
-Run `python build_sandbox.py` to build the project.
+Run `python build_sandbox.py` to build the project. 
 
 The executable is located in `sandbox/build`.
 
