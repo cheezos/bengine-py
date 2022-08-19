@@ -1,4 +1,4 @@
-## Bepto Engine in Python!
+## Bepto Engine Py
 
 A basic 3D OpenGL Python Game Engine.
 
