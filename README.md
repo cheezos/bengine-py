@@ -1,3 +1,7 @@
+## Notice
+
+This is for educational purposes only and will no longer be updated or maintained.
+
 ## Bepto Engine Py
 
 A 3D python game engine.
