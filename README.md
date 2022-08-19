@@ -1,4 +1,4 @@
-## Bepto Engine
+## Bepto Engine in Python!
 
 A basic 3D OpenGL Python Game Engine.
 
@@ -24,3 +24,7 @@ The executable is located in `sandbox/build`.
 
 - Move the camera around with your mouse and `W` `A` `S` `D`.
 - Toggle wireframe with `.` (period).
+
+--------
+
+Created with Python and GLFW.
